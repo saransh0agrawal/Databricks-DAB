@@ -1,0 +1,42 @@
+# This is a Databricks asset bundle definition for databricks_dab.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: databricks_dab
+  uuid: 072b8753-9b42-4d45-a53f-8827431c33eb
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+
+
+# Variable declarations. These variables are assigned in the dev/prod targets below.
+variables:
+  catalog:
+    description: The catalog to use
+  schema:
+    description: The schema to use
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: dbc-f6e5dcd1-31c5.cloud.databricks.com
+      root_path: ~/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: workspace
+      schema: ${workspace.current_user.short_name}
+
+      
+  prod:
+    mode: production
+    workspace:
+      host: dbc-f6e5dcd1-31c5.cloud.databricks.com
+      root_path: /Workspace/Deployment_DAB/Prod/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: workspace
+      schema: ${workspace.current_user.short_name}
+    permissions:
+      - user_name: saransh9azure@gmail.com
+        level: CAN_MANAGE
